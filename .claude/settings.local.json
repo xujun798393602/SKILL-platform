@@ -39,7 +39,8 @@
       "Bash(git add *)",
       "Bash(git commit -m 'feat: 实现SKILL管理平台完整功能 \\(Python/Flask\\) *)",
       "Bash(python -m py_compile app/__init__.py app/models/*.py app/routes/*.py app/utils/*.py)",
-      "Bash(python -m pytest tests/ -v --tb=short)"
+      "Bash(python -m pytest tests/ -v --tb=short)",
+      "Bash(git commit -m 'fix: 修复Docker部署问题 *)"
     ]
   }
 }
