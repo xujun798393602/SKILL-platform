@@ -1,11 +1,30 @@
 {
-  "sessionStart": "2026-05-17T12:28:34.785Z",
+  "sessionStart": "2026-05-17T14:52:55.034Z",
   "projectDir": "E:/shareDIR/skill-platform",
-  "language": "java",
-  "checker": "java-checker",
-  "detectedBy": "pom.xml",
+  "language": "python",
+  "checker": "python-checker",
+  "detectedBy": "requirements.txt",
   "pluginVersion": "1.0.0",
   "languageVersion": null,
-  "projectName": "spring-boot-starter-parent",
-  "framework": "Spring Boot"
+  "projectName": null,
+  "framework": "Flask",
+  "dependencies": [
+    "Flask",
+    "Flask-SQLAlchemy",
+    "Flask-Migrate",
+    "Flask-JWT-Extended",
+    "Flask-CORS",
+    "Flask-Limiter",
+    "psycopg2-binary",
+    "python-dotenv",
+    "gunicorn",
+    "bcrypt",
+    "marshmallow",
+    "redis",
+    "elasticsearch",
+    "boto3",
+    "pytest",
+    "pytest-flask",
+    "pytest-cov"
+  ]
 }

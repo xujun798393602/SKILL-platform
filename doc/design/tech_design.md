@@ -22,7 +22,7 @@
 | 缓存 | Redis 7 | 高性能，支持多种数据结构 |
 | 文件存储 | MinIO/S3 | S3兼容，私有部署 |
 | 搜索引擎 | Elasticsearch 8 | 全文检索，模糊匹配 |
-| 认证方案 | JWT + Spring Security | 无状态，易扩展 |
+| 认证方案 | JWT | 无状态，易扩展 |
 | 部署方式 | Docker + K8s | 标准化，自动化 |
 
 ---
