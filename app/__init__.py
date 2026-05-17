@@ -25,6 +25,11 @@ def create_app(config_name='default'):
     cors.init_app(app)
     limiter.init_app(app)
 
+    # Health check endpoint
+    @app.route('/health')
+    def health_check():
+        return {'status': 'healthy', 'service': 'skill-platform'}, 200
+
     # Configure JWT to return 401 instead of 422 for invalid tokens
     @jwt.invalid_token_loader
     def invalid_token_callback(error):
