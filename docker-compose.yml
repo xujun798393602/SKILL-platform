@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - app
+    networks:
+      - skill-network
+
+  app:
+    build: .
+    environment:
+      - FLASK_ENV=production
+      - DATABASE_URL=postgresql://skill_user:skill_pass@db:5432/skill_platform
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-change-this-in-production}
+      - SECRET_KEY=${SECRET_KEY:-change-this-in-production}
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    networks:
+      - skill-network
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: skill_platform
+      POSTGRES_USER: skill_user
+      POSTGRES_PASSWORD: skill_pass
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U skill_user -d skill_platform"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - skill-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - skill-network
+
+volumes:
+  pgdata:
+
+networks:
+  skill-network:
+    driver: bridge
