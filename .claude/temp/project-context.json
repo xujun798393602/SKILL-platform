@@ -1,8 +1,11 @@
 {
-  "sessionStart": "2026-05-16T07:10:22.278Z",
+  "sessionStart": "2026-05-17T12:28:34.785Z",
   "projectDir": "E:/shareDIR/skill-platform",
-  "language": "unknown",
-  "checker": null,
-  "detectedBy": null,
-  "pluginVersion": "1.0.0"
+  "language": "java",
+  "checker": "java-checker",
+  "detectedBy": "pom.xml",
+  "pluginVersion": "1.0.0",
+  "languageVersion": null,
+  "projectName": "spring-boot-starter-parent",
+  "framework": "Spring Boot"
 }
