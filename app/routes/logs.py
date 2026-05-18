@@ -1,8 +1,7 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required
 
 from app.models.system import OperationLog
-from app.utils.error_handlers import success_response, error_response
+from app.utils.error_handlers import error_response
 from app.utils.decorators import admin_required
 
 logs_bp = Blueprint('logs', __name__)
@@ -43,7 +42,7 @@ def list_logs():
         'code': 0,
         'message': 'success',
         'data': {
-            'logs': [l.to_dict() for l in items],
+            'logs': [log.to_dict() for log in items],
             'total': total,
             'page': page,
             'pageSize': page_size,

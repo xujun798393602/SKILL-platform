@@ -121,8 +121,12 @@ class SkillRelation(db.Model):
     relation_type = db.Column(db.String(30), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), nullable=False, default=lambda: datetime.now(timezone.utc))
 
-    source_skill = db.relationship('Skill', foreign_keys=[source_skill_id], backref=db.backref('outgoing_relations', lazy='dynamic'))
-    target_skill = db.relationship('Skill', foreign_keys=[target_skill_id], backref=db.backref('incoming_relations', lazy='dynamic'))
+    source_skill = db.relationship(
+        'Skill', foreign_keys=[source_skill_id],
+        backref=db.backref('outgoing_relations', lazy='dynamic'))
+    target_skill = db.relationship(
+        'Skill', foreign_keys=[target_skill_id],
+        backref=db.backref('incoming_relations', lazy='dynamic'))
 
 
 class PositionSkill(db.Model):

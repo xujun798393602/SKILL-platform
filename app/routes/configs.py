@@ -1,9 +1,8 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required
 
 from app import db
 from app.models.system import SystemConfig
-from app.utils.error_handlers import success_response, error_response
+from app.utils.error_handlers import error_response
 from app.utils.decorators import admin_required
 
 configs_bp = Blueprint('configs', __name__)

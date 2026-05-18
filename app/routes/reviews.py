@@ -7,7 +7,7 @@ from app.models.skill import Skill
 from app.models.review import SkillReview
 from app.models.user import User
 from app.models.notification import Notification
-from app.utils.error_handlers import success_response, error_response
+from app.utils.error_handlers import error_response
 
 reviews_bp = Blueprint('reviews', __name__)
 

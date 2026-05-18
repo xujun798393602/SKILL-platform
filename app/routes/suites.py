@@ -3,7 +3,6 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from app import db
 from app.models.suite import Suite, SuiteSkill
-from app.models.skill import Skill
 from app.utils.error_handlers import success_response, error_response
 
 suites_bp = Blueprint('suites', __name__)

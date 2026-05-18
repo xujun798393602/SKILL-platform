@@ -3,7 +3,6 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from app import db
 from app.models.system import Feedback
-from app.models.user import User
 from app.utils.error_handlers import success_response, error_response
 from app.utils.decorators import admin_required
 

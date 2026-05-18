@@ -1,4 +1,3 @@
-import uuid
 import secrets
 from datetime import datetime, timezone, timedelta
 from flask import Blueprint, request, jsonify
@@ -7,7 +6,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app import db
 from app.models.social import SkillShare
 from app.models.skill import Skill
-from app.utils.error_handlers import success_response, error_response
+from app.utils.error_handlers import error_response
 
 shares_bp = Blueprint('shares', __name__)
 
@@ -50,7 +49,8 @@ def access_share(share_token):
     if not share:
         return error_response('分享链接不存在', status=404)
 
-    if share.expires_at < datetime.now(timezone.utc):
+    now = datetime.now(timezone.utc).replace(tzinfo=None)
+    if share.expires_at.replace(tzinfo=None) < now:
         return error_response('分享链接已过期，请联系分享者重新生成', error_code='SHARE002', status=410)
 
     share.access_count += 1

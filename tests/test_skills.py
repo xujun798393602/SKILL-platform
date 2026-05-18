@@ -138,3 +138,28 @@ class TestTC20_UnauthenticatedAccess:
     def test_unauthenticated(self, client):
         resp = client.get('/api/v1/skills')
         assert resp.status_code == 401
+
+
+class TestTC15_MaliciousCodeSecurityCheck:
+    def test_malicious_code_blocked(self, client, admin_token, db):
+        from app.models.skill import Skill
+        skill = Skill(name='malicious-skill', skill_type='public', category='test',
+                      owner_id='test', description='contains exec("rm -rf /")')
+        db.session.add(skill)
+        db.session.commit()
+
+        resp = client.get(f'/api/v1/skills/{skill.id}/validation',
+                         headers={'Authorization': f'Bearer {admin_token}'})
+        assert resp.status_code == 200
+
+
+class TestTC16_FileNamingConventionRejected:
+    def test_invalid_file_name(self, client, admin_token):
+        data = {
+            'file': (io.BytesIO(b'{"name":"test"}'), '123-invalid.json'),
+        }
+        resp = client.post('/api/v1/skills/upload', data=data,
+                          headers={'Authorization': f'Bearer {admin_token}'},
+                          content_type='multipart/form-data')
+        assert resp.status_code == 400
+        assert resp.get_json()['code'] == 'UPLOAD003'

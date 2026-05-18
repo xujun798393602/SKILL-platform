@@ -1,5 +1,4 @@
 """Tests for F001 - 用户认证服务 (TC-1 ~ TC-4)"""
-import bcrypt
 from app.models.user import User
 
 

@@ -1,12 +1,12 @@
 from datetime import datetime, timezone
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 from app.models.skill import Skill
 from app.models.user import User
 from app.models.deployment import Deployment
 from app.models.review import SkillReview
-from app.utils.error_handlers import success_response, error_response
+from app.utils.error_handlers import error_response
 from app.utils.decorators import admin_required
 
 statistics_bp = Blueprint('statistics', __name__)

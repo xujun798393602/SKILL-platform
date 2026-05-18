@@ -1,4 +1,5 @@
 """Tests for F002 - 权限管理服务 (TC-5 ~ TC-8)"""
+import bcrypt
 
 
 class TestTC5_AdminPermissionCheck:
@@ -47,6 +48,3 @@ class TestTC8_NoRoleUser:
         }, headers={'Authorization': f'Bearer {token}'})
         assert resp.status_code == 200
         assert resp.get_json()['data']['allowed'] is False
-
-
-import bcrypt

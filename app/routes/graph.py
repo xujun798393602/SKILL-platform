@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 from app import db
 from app.models.skill import Skill, SkillRelation
-from app.utils.error_handlers import success_response, error_response
+from app.utils.error_handlers import error_response
 
 graph_bp = Blueprint('graph', __name__)
 
@@ -15,7 +15,6 @@ def get_relations(skill_id):
     if not skill:
         return error_response('SKILL不存在', error_code='GRAPH001', status=404)
 
-    max_depth = request.args.get('maxDepth', 1, type=int)
     relations = SkillRelation.query.filter_by(source_skill_id=skill_id).all()
 
     result = []

@@ -1,5 +1,3 @@
-import os
-import uuid
 import hashlib
 from datetime import datetime, timezone
 from flask import Blueprint, request, jsonify
@@ -9,8 +7,7 @@ from app import db
 from app.models.skill import Skill, SkillVersion, SkillFile, Tag, SkillTag
 from app.models.user import User
 from app.utils.error_handlers import success_response, error_response, paginated_response
-from app.utils.decorators import permission_required
-from app.utils.validators import validate_file_format, validate_file_name, validate_version
+from app.utils.validators import validate_file_format, validate_file_name
 
 skills_bp = Blueprint('skills', __name__)
 
@@ -42,7 +39,8 @@ def list_skills():
         tag_list = [t.strip() for t in tags.split(',')]
         query = query.filter(Skill.tags.any(Tag.name.in_(tag_list)))
 
-    sort_col = getattr(Skill, sort_by.replace('createdAt', 'created_at').replace('updatedAt', 'updated_at'), Skill.created_at)
+    sort_field = sort_by.replace('createdAt', 'created_at').replace('updatedAt', 'updated_at')
+    sort_col = getattr(Skill, sort_field, Skill.created_at)
     if sort_order == 'desc':
         query = query.order_by(sort_col.desc())
     else:
@@ -175,6 +173,13 @@ def upload_skill():
 
     if not validate_file_format(file.filename):
         return error_response('不支持的文件格式，仅支持 .json、.skill、.zip 格式', error_code='UPLOAD001', status=400)
+
+    name_part = file.filename.rsplit('.', 1)[0]
+    if not validate_file_name(name_part):
+        return error_response(
+            '文件名不符合命名规范：必须以字母开头，仅允许字母、数字、下划线和连字符，长度2-64字符',
+            error_code='UPLOAD003', status=400
+        )
 
     file_content = file.read()
     file_size = len(file_content)

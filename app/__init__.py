@@ -1,10 +1,11 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+import os
 
 from config import config_map
 
@@ -16,7 +17,9 @@ limiter = Limiter(key_func=get_remote_address)
 
 
 def create_app(config_name='default'):
-    app = Flask(__name__)
+    app = Flask(__name__,
+                static_folder=os.path.join(os.path.dirname(os.path.dirname(__file__)), 'frontend'),
+                static_url_path='')
     app.config.from_object(config_map.get(config_name, config_map['default']))
 
     db.init_app(app)
@@ -29,6 +32,11 @@ def create_app(config_name='default'):
     @app.route('/health')
     def health_check():
         return {'status': 'healthy', 'service': 'skill-platform'}, 200
+
+    # 前端静态文件
+    @app.route('/')
+    def index():
+        return send_from_directory(app.static_folder, 'index.html')
 
     # Configure JWT to return 401 instead of 422 for invalid tokens
     @jwt.invalid_token_loader
