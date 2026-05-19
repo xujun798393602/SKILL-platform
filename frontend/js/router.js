@@ -51,18 +51,27 @@ window.Router = (function() {
 
         // Auth guard: redirect to login if no token (except for /login)
         if (hash !== '/login' && !localStorage.getItem('accessToken')) {
-            navigate('/login');
+            window.location.hash = '#/login';
+            window.location.reload();
             return;
         }
 
         current = hash;
+
+        // Login page: always render into #app (no layout)
+        if (hash === '/login') {
+            document.getElementById('app').innerHTML = '';
+            result.handler(document.getElementById('app'), result.params);
+            return;
+        }
+
         const container = document.getElementById('page-content');
         if (container) {
             container.innerHTML = '';
             result.handler(container, result.params);
         } else {
-            // No layout yet (login page)
-            result.handler(document.getElementById('app'), result.params);
+            // No layout yet, reload to let boot() render it
+            window.location.reload();
         }
     }
 

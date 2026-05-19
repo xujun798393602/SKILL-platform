@@ -169,7 +169,8 @@
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         localStorage.removeItem('userInfo');
-        Router.navigate('/login');
+        window.location.hash = '#/login';
+        window.location.reload();
     };
 
     window.showPasswordDialog = function() {
