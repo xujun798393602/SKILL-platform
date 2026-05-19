@@ -88,4 +88,56 @@ def create_app(config_name='default'):
     from app.utils.error_handlers import register_error_handlers
     register_error_handlers(app)
 
+    # CLI: flask init-db
+    @app.cli.command('init-db')
+    def init_db():
+        """Initialize database with default roles and admin user."""
+        import bcrypt
+        from app.models.user import User, Role, UserRole, Permission, RolePermission
+
+        db.create_all()
+
+        # Roles
+        roles = {}
+        for name, display in [('USER', '普通用户'), ('ADMIN', '管理员')]:
+            role = Role.query.filter_by(name=name).first()
+            if not role:
+                role = Role(name=name, display_name=display, is_system=True)
+                db.session.add(role)
+                db.session.flush()
+            roles[name] = role
+
+        # Permissions
+        default_perms = [
+            ('skill:upload', '上传SKILL', 'skill', 'write'),
+            ('skill:review', '审核SKILL', 'skill', 'review'),
+            ('skill:deploy', '部署SKILL', 'skill', 'deploy'),
+            ('user:manage', '管理用户', 'user', 'manage'),
+            ('role:manage', '管理角色', 'role', 'manage'),
+            ('config:manage', '管理配置', 'config', 'manage'),
+        ]
+        for code, name, resource, action in default_perms:
+            perm = Permission.query.filter_by(code=code).first()
+            if not perm:
+                perm = Permission(code=code, name=name, resource=resource, action=action)
+                db.session.add(perm)
+                db.session.flush()
+                db.session.add(RolePermission(role_id=roles['ADMIN'].id, permission_id=perm.id))
+
+        # Admin user
+        admin = User.query.filter_by(employee_id='ADMIN001').first()
+        if not admin:
+            pw = bcrypt.hashpw('Admin@123'.encode(), bcrypt.gensalt()).decode()
+            admin = User(
+                employee_id='ADMIN001', name='管理员',
+                email='admin@skill-platform.com', password_hash=pw,
+                department='管理部', status='active',
+            )
+            db.session.add(admin)
+            db.session.flush()
+            db.session.add(UserRole(user_id=admin.id, role_id=roles['ADMIN'].id))
+
+        db.session.commit()
+        print('Database initialized. Admin: ADMIN001 / Admin@123')
+
     return app
