@@ -126,7 +126,10 @@
 
         highlightNav();
         window.addEventListener('hashchange', highlightNav);
-        Router.handleRoute();
+        // Delay page render to ensure DOM is fully ready
+        setTimeout(function() {
+            Router.handleRoute();
+        }, 0);
     }
 
     function initSidebarResize() {

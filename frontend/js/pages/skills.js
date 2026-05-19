@@ -32,7 +32,7 @@ window.SkillsPage = (function() {
                         '<el-table-column prop="downloadCount" label="下载" width="70"></el-table-column>' +
                         '<el-table-column label="大小" width="80"><template slot-scope="scope">{{ formatSize(scope.row.fileSize) }}</template></el-table-column>' +
                         '<el-table-column label="创建时间" width="150"><template slot-scope="scope">{{ formatDate(scope.row.createdAt) }}</template></el-table-column>' +
-                        '<el-table-column label="操作" width="180" fixed="right">' +
+                        '<el-table-column label="操作" width="180">' +
                             '<template slot-scope="scope">' +
                                 '<el-button size="small" type="primary" icon="el-icon-download" plain @click="download(scope.row)">下载</el-button>' +
                                 '<el-button size="small" type="danger" icon="el-icon-delete" plain @click="remove(scope.row)">删除</el-button>' +
