@@ -35,15 +35,13 @@
                 '<div class="sidebar" id="app-sidebar">' +
                     '<div class="sidebar-header">' +
                         '<h2>SKILL平台</h2>' +
-                        '<span class="logo-short">SK</span>' +
                     '</div>' +
                     '<nav class="sidebar-nav">' + sidebarHtml + '</nav>' +
+                    '<div class="sidebar-resize-handle" id="sidebar-resize"></div>' +
                 '</div>' +
                 '<div class="main-area">' +
                     '<header class="header-bar">' +
-                        '<div class="header-left">' +
-                            '<i class="el-icon-s-fold toggle-sidebar" id="toggle-sidebar-btn" onclick="toggleSidebar()"></i>' +
-                        '</div>' +
+                        '<div class="header-left"></div>' +
                         '<div class="header-right">' +
                             '<div class="user-menu-wrap">' +
                                 '<span class="user-dropdown" onclick="this.parentElement.classList.toggle(\'open\')">' +
@@ -123,21 +121,49 @@
             }
         });
 
+        // Sidebar drag resize
+        initSidebarResize();
+
         highlightNav();
         window.addEventListener('hashchange', highlightNav);
         Router.handleRoute();
     }
 
-    window.toggleSidebar = function() {
+    function initSidebarResize() {
+        var handle = document.getElementById('sidebar-resize');
         var sidebar = document.getElementById('app-sidebar');
-        var btn = document.getElementById('toggle-sidebar-btn');
-        sidebar.classList.toggle('collapsed');
-        if (sidebar.classList.contains('collapsed')) {
-            btn.className = 'el-icon-s-unfold toggle-sidebar';
-        } else {
-            btn.className = 'el-icon-s-fold toggle-sidebar';
+        if (!handle || !sidebar) return;
+
+        var startX, startWidth;
+        var minWidth = 160;
+        var maxWidth = 400;
+
+        function onMouseDown(e) {
+            e.preventDefault();
+            startX = e.clientX;
+            startWidth = sidebar.offsetWidth;
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+            document.body.style.cursor = 'col-resize';
+            document.body.style.userSelect = 'none';
         }
-    };
+
+        function onMouseMove(e) {
+            var newWidth = startWidth + (e.clientX - startX);
+            if (newWidth < minWidth) newWidth = minWidth;
+            if (newWidth > maxWidth) newWidth = maxWidth;
+            sidebar.style.width = newWidth + 'px';
+        }
+
+        function onMouseUp() {
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+            document.body.style.cursor = '';
+            document.body.style.userSelect = '';
+        }
+
+        handle.addEventListener('mousedown', onMouseDown);
+    }
 
     window.doLogout = function() {
         localStorage.removeItem('accessToken');

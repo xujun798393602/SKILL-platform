@@ -101,20 +101,9 @@ html, body, #app {
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
-  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   z-index: 10;
 }
-.sidebar::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: rgba(255,255,255,0.06);
-}
-.sidebar.collapsed { width: 64px; }
 
 .sidebar-header {
   height: var(--header-height);
@@ -132,26 +121,7 @@ html, body, #app {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   letter-spacing: 2px;
-  overflow: hidden;
-  opacity: 1;
-  transition: opacity 0.2s ease 0.1s;
 }
-.sidebar-header .logo-short {
-  display: none;
-  font-size: 20px;
-  font-weight: 700;
-  background: linear-gradient(135deg, #fff, #a8c0ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.sidebar.collapsed .sidebar-header h2 {
-  opacity: 0;
-  width: 0;
-  overflow: hidden;
-  visibility: hidden;
-  transition: opacity 0.05s ease, visibility 0s 0.05s, width 0s 0.05s;
-}
-.sidebar.collapsed .sidebar-header .logo-short { display: inline; }
 
 .sidebar-nav {
   flex: 1;
@@ -159,6 +129,23 @@ html, body, #app {
   padding: 12px 8px;
 }
 .sidebar-nav::-webkit-scrollbar { width: 0; }
+
+/* Sidebar resize handle */
+.sidebar-resize-handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: col-resize;
+  background: transparent;
+  z-index: 20;
+  transition: background 0.15s;
+}
+.sidebar-resize-handle:hover,
+.sidebar-resize-handle:active {
+  background: var(--primary);
+}
 
 .nav-item {
   height: 42px;
@@ -194,19 +181,6 @@ html, body, #app {
 .nav-item .nav-text {
   white-space: nowrap;
   overflow: hidden;
-  opacity: 1;
-  transition: opacity 0.2s ease 0.1s;
-}
-.sidebar.collapsed .nav-item {
-  justify-content: center;
-  padding: 0;
-}
-.sidebar.collapsed .nav-text {
-  opacity: 0;
-  width: 0;
-  overflow: hidden;
-  visibility: hidden;
-  transition: opacity 0.05s ease, visibility 0s 0.05s, width 0s 0.05s;
 }
 
 /* ==================== Main Area ==================== */
