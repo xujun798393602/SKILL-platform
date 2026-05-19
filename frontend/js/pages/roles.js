@@ -7,19 +7,30 @@ window.RolesPage = (function() {
             template:
                 '<div><div style="display:flex;justify-content:space-between;align-items:center"><h2>角色管理</h2>' +
                 '<el-button type="primary" @click="showCreate">创建角色</el-button></div>' +
-                '<el-table :data="roles" v-loading="loading" stripe style="margin-top:16px">' +
-                    '<el-table-column prop="name" label="标识" width="120"></el-table-column>' +
-                    '<el-table-column prop="displayName" label="显示名" width="150"></el-table-column>' +
-                    '<el-table-column prop="description" label="描述" min-width="200"></el-table-column>' +
-                    '<el-table-column label="系统角色" width="90"><template slot-scope="s"><el-tag :type="s.row.isSystem?\'warning\':\'info\'" size="small">{{ s.row.isSystem?"是":"否" }}</el-tag></template></el-table-column>' +
-                    '<el-table-column label="操作" width="250">' +
-                        '<template slot-scope="s">' +
-                            '<el-button size="mini" type="text" @click="showEdit(s.row)">编辑</el-button>' +
-                            '<el-button size="mini" type="text" @click="showPerm(s.row)">权限</el-button>' +
-                            '<el-button size="mini" type="text" style="color:#f56c6c" @click="remove(s.row)" v-if="!s.row.isSystem">删除</el-button>' +
-                        '</template>' +
-                    '</el-table-column>' +
-                '</el-table>' +
+                '<table class="data-table" style="margin-top:16px">' +
+                    '<thead><tr>' +
+                        '<th style="width:120px">标识</th>' +
+                        '<th style="width:150px">显示名</th>' +
+                        '<th>描述</th>' +
+                        '<th style="width:90px">系统角色</th>' +
+                        '<th style="width:250px">操作</th>' +
+                    '</tr></thead>' +
+                    '<tbody>' +
+                        '<tr v-if="loading"><td colspan="5" style="text-align:center;padding:20px">加载中...</td></tr>' +
+                        '<tr v-else-if="!roles.length"><td colspan="5" style="text-align:center;padding:20px;color:#999">暂无数据</td></tr>' +
+                        '<template v-else><tr v-for="row in roles" :key="row.id">' +
+                            '<td>{{ row.name }}</td>' +
+                            '<td>{{ row.displayName }}</td>' +
+                            '<td>{{ row.description }}</td>' +
+                            '<td><el-tag :type="row.isSystem?\'warning\':\'info\'" size="small">{{ row.isSystem?"是":"否" }}</el-tag></td>' +
+                            '<td>' +
+                                '<el-button size="mini" type="text" @click="showEdit(row)">编辑</el-button>' +
+                                '<el-button size="mini" type="text" @click="showPerm(row)">权限</el-button>' +
+                                '<el-button size="mini" type="text" style="color:#f56c6c" @click="remove(row)" v-if="!row.isSystem">删除</el-button>' +
+                            '</td>' +
+                        '</tr></template>' +
+                    '</tbody>' +
+                '</table>' +
                 '<el-dialog :title="isEdit?\'编辑角色\':\'创建角色\'" :visible.sync="dialogVisible" width="400px">' +
                     '<el-form :model="form" label-width="80px">' +
                         '<el-form-item label="标识"><el-input v-model="form.name" :disabled="isEdit"></el-input></el-form-item>' +
@@ -75,11 +86,7 @@ window.RolesPage = (function() {
                 showPerm: function(row) {
                     var self = this;
                     self.permRole = row;
-                    // Group permissions by resource (simplified - show all available)
                     api.get('/roles').then(function() {
-                        // Fetch all permissions from the system
-                        // Since there's no direct "list all permissions" endpoint, we use the role's current permissions
-                        // and show a simplified view
                         self.permGroups = [
                             { resource: 'SKILL', perms: [
                                 { id: 'p1', code: 'skill:upload', name: '上传SKILL' },

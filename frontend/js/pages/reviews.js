@@ -6,19 +6,31 @@ window.ReviewsPage = (function() {
             el: '#reviews-mount',
             template:
                 '<div><h2>审核管理</h2>' +
-                '<el-table :data="items" v-loading="loading" stripe style="margin-top:16px">' +
-                    '<el-table-column prop="skillId" label="SKILL ID" width="280"></el-table-column>' +
-                    '<el-table-column prop="action" label="决定" width="100"><template slot-scope="s"><span v-html="statusTag(s.row.action)"></span></template></el-table-column>' +
-                    '<el-table-column prop="comment" label="审核意见"></el-table-column>' +
-                    '<el-table-column prop="reviewerId" label="审核人" width="200"></el-table-column>' +
-                    '<el-table-column label="审核时间" width="160"><template slot-scope="s">{{ formatDate(s.row.reviewedAt) }}</template></el-table-column>' +
-                    '<el-table-column label="操作" width="200">' +
-                        '<template slot-scope="s">' +
-                            '<el-button size="mini" type="success" @click="review(s.row.skillId,\'approved\')">通过</el-button>' +
-                            '<el-button size="mini" type="danger" @click="review(s.row.skillId,\'rejected\')">拒绝</el-button>' +
-                        '</template>' +
-                    '</el-table-column>' +
-                '</el-table>' +
+                '<table class="data-table" style="margin-top:16px">' +
+                    '<thead><tr>' +
+                        '<th style="width:280px">SKILL ID</th>' +
+                        '<th style="width:100px">决定</th>' +
+                        '<th>审核意见</th>' +
+                        '<th style="width:200px">审核人</th>' +
+                        '<th style="width:160px">审核时间</th>' +
+                        '<th style="width:200px">操作</th>' +
+                    '</tr></thead>' +
+                    '<tbody>' +
+                        '<tr v-if="loading"><td colspan="6" style="text-align:center;padding:20px">加载中...</td></tr>' +
+                        '<tr v-else-if="!items.length"><td colspan="6" style="text-align:center;padding:20px;color:#999">暂无数据</td></tr>' +
+                        '<template v-else><tr v-for="row in items" :key="row.id">' +
+                            '<td>{{ row.skillId }}</td>' +
+                            '<td><span v-html="statusTag(row.action)"></span></td>' +
+                            '<td>{{ row.comment }}</td>' +
+                            '<td>{{ row.reviewerId }}</td>' +
+                            '<td>{{ formatDate(row.reviewedAt) }}</td>' +
+                            '<td>' +
+                                '<el-button size="mini" type="success" @click="review(row.skillId,\'approved\')">通过</el-button>' +
+                                '<el-button size="mini" type="danger" @click="review(row.skillId,\'rejected\')">拒绝</el-button>' +
+                            '</td>' +
+                        '</tr></template>' +
+                    '</tbody>' +
+                '</table>' +
                 '<div style="text-align:right;margin-top:16px"><el-pagination background layout="total, prev, pager, next" :total="total" :current-page="page" :page-size="pageSize" @current-change="onPage"></el-pagination></div>' +
                 '</div>',
             data: function() { return { items: [], total: 0, page: 1, pageSize: 20, loading: false }; },

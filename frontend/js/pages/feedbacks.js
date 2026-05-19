@@ -7,17 +7,30 @@ window.FeedbacksPage = (function() {
             template:
                 '<div><div style="display:flex;justify-content:space-between;align-items:center"><h2>反馈管理</h2>' +
                 '<el-button type="primary" @click="showSubmit">提交反馈</el-button></div>' +
-                '<el-table :data="items" v-loading="loading" stripe style="margin-top:16px">' +
-                    '<el-table-column prop="type" label="类型" width="80"></el-table-column>' +
-                    '<el-table-column prop="title" label="标题" min-width="150"></el-table-column>' +
-                    '<el-table-column prop="content" label="内容" min-width="200" show-overflow-tooltip></el-table-column>' +
-                    '<el-table-column label="状态" width="90"><template slot-scope="s"><span v-html="statusTag(s.row.status)"></span></template></el-table-column>' +
-                    '<el-table-column prop="reply" label="回复" min-width="200" show-overflow-tooltip></el-table-column>' +
-                    '<el-table-column label="时间" width="160"><template slot-scope="s">{{ formatDate(s.row.createdAt) }}</template></el-table-column>' +
-                    '<el-table-column label="操作" width="100" v-if="isAdmin">' +
-                        '<template slot-scope="s"><el-button size="mini" type="text" @click="showReply(s.row)" v-if="s.row.status!==\'replied\'">回复</el-button></template>' +
-                    '</el-table-column>' +
-                '</el-table>' +
+                '<table class="data-table" style="margin-top:16px">' +
+                    '<thead><tr>' +
+                        '<th style="width:80px">类型</th>' +
+                        '<th>标题</th>' +
+                        '<th>内容</th>' +
+                        '<th style="width:90px">状态</th>' +
+                        '<th>回复</th>' +
+                        '<th style="width:160px">时间</th>' +
+                        '<th style="width:100px" v-if="isAdmin">操作</th>' +
+                    '</tr></thead>' +
+                    '<tbody>' +
+                        '<tr v-if="loading"><td :colspan="isAdmin?7:6" style="text-align:center;padding:20px">加载中...</td></tr>' +
+                        '<tr v-else-if="!items.length"><td :colspan="isAdmin?7:6" style="text-align:center;padding:20px;color:#999">暂无数据</td></tr>' +
+                        '<template v-else><tr v-for="row in items" :key="row.id">' +
+                            '<td>{{ row.type }}</td>' +
+                            '<td>{{ row.title }}</td>' +
+                            '<td>{{ row.content }}</td>' +
+                            '<td><span v-html="statusTag(row.status)"></span></td>' +
+                            '<td>{{ row.reply }}</td>' +
+                            '<td>{{ formatDate(row.createdAt) }}</td>' +
+                            '<td v-if="isAdmin"><el-button size="mini" type="text" @click="showReply(row)" v-if="row.status!==\'replied\'">回复</el-button></td>' +
+                        '</tr></template>' +
+                    '</tbody>' +
+                '</table>' +
                 '<div style="text-align:right;margin-top:16px"><el-pagination background layout="total, prev, pager, next" :total="total" :current-page="page" :page-size="pageSize" @current-change="onPage"></el-pagination></div>' +
                 '<el-dialog title="提交反馈" :visible.sync="submitVisible" width="500px">' +
                     '<el-form :model="form" label-width="80px">' +

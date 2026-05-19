@@ -7,16 +7,28 @@ window.NotificationsPage = (function() {
             template:
                 '<div><div style="display:flex;justify-content:space-between;align-items:center"><h2>消息通知</h2>' +
                 '<el-button size="small" @click="markAllRead">全部已读</el-button></div>' +
-                '<el-table :data="items" v-loading="loading" stripe style="margin-top:16px">' +
-                    '<el-table-column label="状态" width="80"><template slot-scope="s"><el-tag :type="s.row.isRead?\'info\':\'danger\'" size="small">{{ s.row.isRead?"已读":"未读" }}</el-tag></template></el-table-column>' +
-                    '<el-table-column prop="type" label="类型" width="120"></el-table-column>' +
-                    '<el-table-column prop="title" label="标题" min-width="150"></el-table-column>' +
-                    '<el-table-column prop="content" label="内容" min-width="200"></el-table-column>' +
-                    '<el-table-column label="时间" width="160"><template slot-scope="s">{{ formatDate(s.row.createdAt) }}</template></el-table-column>' +
-                    '<el-table-column label="操作" width="100">' +
-                        '<template slot-scope="s"><el-button size="mini" type="text" @click="markRead(s.row)" v-if="!s.row.isRead">标记已读</el-button></template>' +
-                    '</el-table-column>' +
-                '</el-table>' +
+                '<table class="data-table" style="margin-top:16px">' +
+                    '<thead><tr>' +
+                        '<th style="width:80px">状态</th>' +
+                        '<th style="width:120px">类型</th>' +
+                        '<th>标题</th>' +
+                        '<th>内容</th>' +
+                        '<th style="width:160px">时间</th>' +
+                        '<th style="width:100px">操作</th>' +
+                    '</tr></thead>' +
+                    '<tbody>' +
+                        '<tr v-if="loading"><td colspan="6" style="text-align:center;padding:20px">加载中...</td></tr>' +
+                        '<tr v-else-if="!items.length"><td colspan="6" style="text-align:center;padding:20px;color:#999">暂无数据</td></tr>' +
+                        '<template v-else><tr v-for="row in items" :key="row.id">' +
+                            '<td><el-tag :type="row.isRead?\'info\':\'danger\'" size="small">{{ row.isRead?"已读":"未读" }}</el-tag></td>' +
+                            '<td>{{ row.type }}</td>' +
+                            '<td>{{ row.title }}</td>' +
+                            '<td>{{ row.content }}</td>' +
+                            '<td>{{ formatDate(row.createdAt) }}</td>' +
+                            '<td><el-button size="mini" type="text" @click="markRead(row)" v-if="!row.isRead">标记已读</el-button></td>' +
+                        '</tr></template>' +
+                    '</tbody>' +
+                '</table>' +
                 '<div style="text-align:right;margin-top:16px"><el-pagination background layout="total, prev, pager, next" :total="total" :current-page="page" :page-size="pageSize" @current-change="onPage"></el-pagination></div></div>',
             data: function() { return { items: [], total: 0, page: 1, pageSize: 20, loading: false }; },
             mounted: function() { this.load(); },

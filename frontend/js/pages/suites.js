@@ -7,18 +7,29 @@ window.SuitesPage = (function() {
             template:
                 '<div><div style="display:flex;justify-content:space-between;align-items:center"><h2>套件管理</h2>' +
                 '<el-button type="primary" @click="showCreate">创建套件</el-button></div>' +
-                '<el-table :data="items" v-loading="loading" stripe style="margin-top:16px">' +
-                    '<el-table-column prop="name" label="名称" min-width="150"></el-table-column>' +
-                    '<el-table-column prop="description" label="描述" min-width="200"></el-table-column>' +
-                    '<el-table-column prop="category" label="分类" width="100"></el-table-column>' +
-                    '<el-table-column prop="skillCount" label="SKILL数" width="90"></el-table-column>' +
-                    '<el-table-column label="操作" width="180">' +
-                        '<template slot-scope="s">' +
-                            '<el-button size="mini" type="text" @click="deploy(s.row)">部署</el-button>' +
-                            '<el-button size="mini" type="text" @click="viewDetail(s.row)">详情</el-button>' +
-                        '</template>' +
-                    '</el-table-column>' +
-                '</el-table>' +
+                '<table class="data-table" style="margin-top:16px">' +
+                    '<thead><tr>' +
+                        '<th>名称</th>' +
+                        '<th>描述</th>' +
+                        '<th style="width:100px">分类</th>' +
+                        '<th style="width:90px">SKILL数</th>' +
+                        '<th style="width:180px">操作</th>' +
+                    '</tr></thead>' +
+                    '<tbody>' +
+                        '<tr v-if="loading"><td colspan="5" style="text-align:center;padding:20px">加载中...</td></tr>' +
+                        '<tr v-else-if="!items.length"><td colspan="5" style="text-align:center;padding:20px;color:#999">暂无数据</td></tr>' +
+                        '<template v-else><tr v-for="row in items" :key="row.id">' +
+                            '<td>{{ row.name }}</td>' +
+                            '<td>{{ row.description }}</td>' +
+                            '<td>{{ row.category }}</td>' +
+                            '<td>{{ row.skillCount }}</td>' +
+                            '<td>' +
+                                '<el-button size="mini" type="text" @click="deploy(row)">部署</el-button>' +
+                                '<el-button size="mini" type="text" @click="viewDetail(row)">详情</el-button>' +
+                            '</td>' +
+                        '</tr></template>' +
+                    '</tbody>' +
+                '</table>' +
                 '<div style="text-align:right;margin-top:16px"><el-pagination background layout="total, prev, pager, next" :total="total" :current-page="page" :page-size="pageSize" @current-change="onPage"></el-pagination></div>' +
                 '<el-dialog title="创建套件" :visible.sync="createVisible" width="500px">' +
                     '<el-form :model="form" label-width="80px">' +
@@ -29,7 +40,6 @@ window.SuitesPage = (function() {
                     '</el-form>' +
                     '<span slot="footer"><el-button @click="createVisible=false">取消</el-button><el-button type="primary" @click="doCreate">创建</el-button></span>' +
                 '</el-dialog>' +
-                // Detail dialog
                 '<el-dialog title="套件详情" :visible.sync="detailVisible" width="600px">' +
                     '<el-descriptions :column="2" border v-if="detail">' +
                         '<el-descriptions-item label="名称">{{ detail.name }}</el-descriptions-item>' +

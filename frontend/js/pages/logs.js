@@ -13,14 +13,28 @@ window.LogsPage = (function() {
                     '<el-form-item><el-button type="primary" @click="load">查询</el-button></el-form-item>' +
                     '<el-form-item><el-button @click="exportLogs">导出</el-button></el-form-item>' +
                 '</el-form>' +
-                '<el-table :data="items" v-loading="loading" stripe>' +
-                    '<el-table-column prop="action" label="操作" width="150"></el-table-column>' +
-                    '<el-table-column prop="resourceType" label="资源类型" width="120"></el-table-column>' +
-                    '<el-table-column prop="resourceId" label="资源ID" width="280"></el-table-column>' +
-                    '<el-table-column prop="detail" label="详情" min-width="200"></el-table-column>' +
-                    '<el-table-column prop="ipAddress" label="IP" width="130"></el-table-column>' +
-                    '<el-table-column label="时间" width="160"><template slot-scope="s">{{ formatDate(s.row.createdAt) }}</template></el-table-column>' +
-                '</el-table>' +
+                '<table class="data-table">' +
+                    '<thead><tr>' +
+                        '<th style="width:150px">操作</th>' +
+                        '<th style="width:120px">资源类型</th>' +
+                        '<th style="width:280px">资源ID</th>' +
+                        '<th>详情</th>' +
+                        '<th style="width:130px">IP</th>' +
+                        '<th style="width:160px">时间</th>' +
+                    '</tr></thead>' +
+                    '<tbody>' +
+                        '<tr v-if="loading"><td colspan="6" style="text-align:center;padding:20px">加载中...</td></tr>' +
+                        '<tr v-else-if="!items.length"><td colspan="6" style="text-align:center;padding:20px;color:#999">暂无数据</td></tr>' +
+                        '<template v-else><tr v-for="row in items" :key="row.id">' +
+                            '<td>{{ row.action }}</td>' +
+                            '<td>{{ row.resourceType }}</td>' +
+                            '<td>{{ row.resourceId }}</td>' +
+                            '<td>{{ row.detail }}</td>' +
+                            '<td>{{ row.ipAddress }}</td>' +
+                            '<td>{{ formatDate(row.createdAt) }}</td>' +
+                        '</tr></template>' +
+                    '</tbody>' +
+                '</table>' +
                 '<div style="text-align:right;margin-top:16px"><el-pagination background layout="total, prev, pager, next" :total="total" :current-page="page" :page-size="pageSize" @current-change="onPage"></el-pagination></div></div>',
             data: function() {
                 return {

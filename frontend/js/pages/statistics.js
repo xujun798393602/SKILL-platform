@@ -12,10 +12,19 @@ window.StatisticsPage = (function() {
                     '</el-col>' +
                 '</el-row>' +
                 '<el-card style="margin-top:16px"><h3 slot="header">热门SKILL</h3>' +
-                    '<el-table :data="hotSkills" stripe>' +
-                        '<el-table-column prop="name" label="名称"></el-table-column>' +
-                        '<el-table-column prop="downloadCount" label="下载次数" width="120"></el-table-column>' +
-                    '</el-table>' +
+                    '<table class="data-table">' +
+                        '<thead><tr>' +
+                            '<th>名称</th>' +
+                            '<th style="width:120px">下载次数</th>' +
+                        '</tr></thead>' +
+                        '<tbody>' +
+                            '<tr v-if="!hotSkills.length"><td colspan="2" style="text-align:center;padding:20px;color:#999">暂无数据</td></tr>' +
+                            '<template v-else><tr v-for="row in hotSkills" :key="row.id || row.name">' +
+                                '<td>{{ row.name }}</td>' +
+                                '<td>{{ row.downloadCount }}</td>' +
+                            '</tr></template>' +
+                        '</tbody>' +
+                    '</table>' +
                 '</el-card>' +
                 '<el-card style="margin-top:16px"><h3 slot="header">趋势数据</h3>' +
                     '<el-form :inline="true" :model="dateRange" style="margin-bottom:12px">' +
@@ -23,11 +32,21 @@ window.StatisticsPage = (function() {
                         '<el-form-item label="结束"><el-date-picker v-model="dateRange.endDate" type="date" value-format="yyyy-MM-dd"></el-date-picker></el-form-item>' +
                         '<el-form-item><el-button type="primary" @click="loadTrends">查询</el-button></el-form-item>' +
                     '</el-form>' +
-                    '<el-table :data="trends" stripe>' +
-                        '<el-table-column prop="date" label="日期"></el-table-column>' +
-                        '<el-table-column prop="uploads" label="上传数"></el-table-column>' +
-                        '<el-table-column prop="downloads" label="下载数"></el-table-column>' +
-                    '</el-table>' +
+                    '<table class="data-table">' +
+                        '<thead><tr>' +
+                            '<th>日期</th>' +
+                            '<th>上传数</th>' +
+                            '<th>下载数</th>' +
+                        '</tr></thead>' +
+                        '<tbody>' +
+                            '<tr v-if="!trends.length"><td colspan="3" style="text-align:center;padding:20px;color:#999">暂无数据</td></tr>' +
+                            '<template v-else><tr v-for="row in trends" :key="row.id || row.date">' +
+                                '<td>{{ row.date }}</td>' +
+                                '<td>{{ row.uploads }}</td>' +
+                                '<td>{{ row.downloads }}</td>' +
+                            '</tr></template>' +
+                        '</tbody>' +
+                    '</table>' +
                 '</el-card></div>',
             data: function() {
                 return {

@@ -6,20 +6,33 @@ window.UsersPage = (function() {
             el: '#users-mount',
             template:
                 '<div><h2>用户管理</h2>' +
-                '<el-table :data="items" v-loading="loading" stripe style="margin-top:16px">' +
-                    '<el-table-column prop="employeeId" label="工号" width="120"></el-table-column>' +
-                    '<el-table-column prop="name" label="姓名" width="120"></el-table-column>' +
-                    '<el-table-column prop="email" label="邮箱" min-width="200"></el-table-column>' +
-                    '<el-table-column prop="department" label="部门" width="120"></el-table-column>' +
-                    '<el-table-column label="状态" width="90"><template slot-scope="s"><span v-html="statusTag(s.row.status)"></span></template></el-table-column>' +
-                    '<el-table-column label="注册时间" width="160"><template slot-scope="s">{{ formatDate(s.row.createdAt) }}</template></el-table-column>' +
-                    '<el-table-column label="操作" width="200">' +
-                        '<template slot-scope="s">' +
-                            '<el-button size="mini" type="text" @click="showRoles(s.row)">角色</el-button>' +
-                            '<el-button size="mini" type="text" @click="showPerms(s.row)">权限</el-button>' +
-                        '</template>' +
-                    '</el-table-column>' +
-                '</el-table>' +
+                '<table class="data-table" style="margin-top:16px">' +
+                    '<thead><tr>' +
+                        '<th style="width:120px">工号</th>' +
+                        '<th style="width:120px">姓名</th>' +
+                        '<th>邮箱</th>' +
+                        '<th style="width:120px">部门</th>' +
+                        '<th style="width:90px">状态</th>' +
+                        '<th style="width:160px">注册时间</th>' +
+                        '<th style="width:200px">操作</th>' +
+                    '</tr></thead>' +
+                    '<tbody>' +
+                        '<tr v-if="loading"><td colspan="7" style="text-align:center;padding:20px">加载中...</td></tr>' +
+                        '<tr v-else-if="!items.length"><td colspan="7" style="text-align:center;padding:20px;color:#999">暂无数据</td></tr>' +
+                        '<template v-else><tr v-for="row in items" :key="row.id">' +
+                            '<td>{{ row.employeeId }}</td>' +
+                            '<td>{{ row.name }}</td>' +
+                            '<td>{{ row.email }}</td>' +
+                            '<td>{{ row.department }}</td>' +
+                            '<td><span v-html="statusTag(row.status)"></span></td>' +
+                            '<td>{{ formatDate(row.createdAt) }}</td>' +
+                            '<td>' +
+                                '<el-button size="mini" type="text" @click="showRoles(row)">角色</el-button>' +
+                                '<el-button size="mini" type="text" @click="showPerms(row)">权限</el-button>' +
+                            '</td>' +
+                        '</tr></template>' +
+                    '</tbody>' +
+                '</table>' +
                 '<div style="text-align:right;margin-top:16px"><el-pagination background layout="total, prev, pager, next" :total="total" :current-page="page" :page-size="pageSize" @current-change="onPage"></el-pagination></div>' +
                 '<el-dialog title="分配角色" :visible.sync="roleDialogVisible" width="500px">' +
                     '<p>用户: {{ selectedUser.name }} ({{ selectedUser.employeeId }})</p>' +
